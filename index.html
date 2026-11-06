@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SILKYSINGZ GEOAI | GAMBIA MAPTILER GPS & 3D INTELLIGENCE</title>
+<title>SILKYSINGZ GEOAI | GAMBIA MAPTILER GPS, ROUTING & LoD1 3D</title>
 
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
@@ -17,7 +17,10 @@
  --blue:#35a7ff;--green:#28c98b;--orange:#ffad42;--red:#ff6474;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:Arial,Helvetica,sans-serif;overflow:hidden
+}
 header{
  height:66px;padding:10px 18px;background:#0b1727;
  border-bottom:1px solid var(--line);display:flex;
@@ -26,20 +29,30 @@ header{
 .brand{font-size:17px;font-weight:800;letter-spacing:.5px}
 .brand span{color:var(--blue)}
 .subtitle{font-size:11px;color:var(--muted);margin-top:4px}
-.status{font-size:11px;color:var(--green);border:1px solid #245d4b;padding:7px 10px;border-radius:20px}
+.status{
+ font-size:11px;color:var(--green);border:1px solid #245d4b;
+ padding:7px 10px;border-radius:20px;white-space:nowrap
+}
 .layout{
  height:calc(100vh - 66px);
- display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
+ display:grid;
+ grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
  gap:9px;padding:9px
 }
 .panel{
- background:var(--panel);border:1px solid var(--line);border-radius:10px;
- min-width:0;min-height:0;overflow-y:auto;
+ background:var(--panel);border:1px solid var(--line);
+ border-radius:10px;min-width:0;min-height:0;overflow-y:auto;
  scrollbar-width:thin;scrollbar-color:#38516d transparent
 }
 .panel-inner{padding:14px}
-.panel-title{font-size:13px;font-weight:800;letter-spacing:.8px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
-.section-title{color:var(--blue);font-size:11px;font-weight:800;margin:18px 0 9px;letter-spacing:.7px}
+.panel-title{
+ font-size:13px;font-weight:800;letter-spacing:.8px;
+ padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)
+}
+.section-title{
+ color:var(--blue);font-size:11px;font-weight:800;
+ margin:18px 0 9px;letter-spacing:.7px
+}
 label{display:block;font-size:11px;color:var(--muted);margin:10px 0 5px}
 input,select,button{
  width:100%;padding:10px;background:var(--panel2);color:var(--text);
@@ -54,41 +67,101 @@ button.orange{background:#76501c;border-color:#a8762b}
 button.red{background:#702b3a;border-color:#a94256}
 button:disabled{opacity:.5;cursor:not-allowed}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.note{font-size:10px;line-height:1.5;color:var(--muted);padding:9px;background:#0b1929;border-radius:6px;margin-top:9px}
+.note{
+ font-size:10px;line-height:1.5;color:var(--muted);
+ padding:9px;background:#0b1929;border-radius:6px;margin-top:9px
+}
 .map-panel{position:relative;overflow:hidden;padding:0}
 #map{height:100%;width:100%;background:#dce5ed}
 .map-overlay{
  position:absolute;z-index:5;top:12px;left:12px;
  background:#07111fe8;padding:10px 12px;border-radius:7px;
- border:1px solid #39516b;font-size:11px;pointer-events:none;max-width:80%
+ border:1px solid #39516b;font-size:11px;
+ pointer-events:none;max-width:85%
 }
-.map-tools{position:absolute;z-index:5;bottom:14px;left:12px;right:12px;display:flex;gap:7px;flex-wrap:wrap}
-.map-tools button{width:auto;padding:9px 12px;background:#0b1929ed}
+.map-tools{
+ position:absolute;z-index:5;bottom:14px;left:12px;right:12px;
+ display:flex;gap:7px;flex-wrap:wrap
+}
+.map-tools button{
+ width:auto;padding:9px 12px;background:#0b1929ed
+}
 .maplibregl-ctrl-group{background:#14263a!important}
 .maplibregl-ctrl button{background-color:#14263a!important}
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.kpi{padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;min-width:0}
-.kpi .value{font-size:19px;font-weight:800;color:var(--green);margin-top:7px;overflow-wrap:anywhere}
+.kpi{
+ padding:12px;background:var(--panel2);border:1px solid var(--line);
+ border-radius:8px;min-width:0
+}
+.kpi .value{
+ font-size:19px;font-weight:800;color:var(--green);
+ margin-top:7px;overflow-wrap:anywhere
+}
 .kpi .name{font-size:10px;color:var(--muted)}
 .kpi small{font-size:9px;color:var(--muted)}
-.chart-wrap{background:#0b1929;border:1px solid var(--line);border-radius:8px;padding:10px;margin-top:10px;height:220px}
-.info-card{padding:11px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;margin-top:9px}
+.chart-wrap{
+ background:#0b1929;border:1px solid var(--line);
+ border-radius:8px;padding:10px;margin-top:10px;height:220px
+}
+.info-card{
+ padding:11px;background:var(--panel2);border:1px solid var(--line);
+ border-radius:8px;margin-top:9px
+}
 .info-card h4{font-size:12px;margin:0 0 7px}
-.info-card p{font-size:11px;color:var(--muted);line-height:1.6;margin:0;overflow-wrap:anywhere}
-a.link{display:inline-block;color:#67c0ff;font-size:11px;margin:7px 12px 0 0;text-decoration:none}
+.info-card p{
+ font-size:11px;color:var(--muted);line-height:1.6;
+ margin:0;overflow-wrap:anywhere
+}
+a.link{
+ display:inline-block;color:#67c0ff;font-size:11px;
+ margin:7px 12px 0 0;text-decoration:none
+}
 a.link:hover{text-decoration:underline}
-.footer{font-size:10px;color:var(--muted);line-height:1.6;padding:12px;border-top:1px solid var(--line);margin-top:18px}
-#message{font-size:11px;color:var(--orange);line-height:1.5;margin-top:9px;white-space:pre-wrap;overflow-wrap:anywhere}
-.legend-row{display:flex;gap:7px;align-items:center;margin:7px 0;font-size:10px;color:var(--muted)}
-.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
-.coordinate{font-family:monospace;font-size:11px;line-height:1.8;color:#d5e6f8;overflow-wrap:anywhere}
-.gps-status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--green);margin-top:8px}
-.gps-indicator{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+.footer{
+ font-size:10px;color:var(--muted);line-height:1.6;
+ padding:12px;border-top:1px solid var(--line);margin-top:18px
+}
+#message{
+ font-size:11px;color:var(--orange);line-height:1.5;
+ margin-top:9px;white-space:pre-wrap;overflow-wrap:anywhere
+}
+.legend-row{
+ display:flex;gap:7px;align-items:center;
+ margin:7px 0;font-size:10px;color:var(--muted)
+}
+.dot{
+ width:9px;height:9px;border-radius:50%;
+ display:inline-block;flex-shrink:0
+}
+.coordinate{
+ font-family:monospace;font-size:11px;line-height:1.8;
+ color:#d5e6f8;overflow-wrap:anywhere
+}
+.gps-status{
+ display:flex;align-items:center;gap:7px;
+ font-size:11px;color:var(--green);margin-top:8px
+}
+.gps-indicator{
+ width:8px;height:8px;border-radius:50%;
+ background:var(--green);display:inline-block
+}
 .key-input{font-family:monospace}
+.checkrow{
+ display:flex;align-items:center;gap:9px;
+ padding:9px;background:#0b1929;border:1px solid var(--line);
+ border-radius:6px;margin-top:8px
+}
+.checkrow input{
+ width:16px;height:16px;margin:0;accent-color:#35a7ff;flex-shrink:0
+}
+.checkrow span{font-size:11px;color:var(--text);line-height:1.4}
 @media(max-width:900px){
  body{overflow:auto}
  header{height:auto;min-height:66px}
- .layout{height:auto;min-height:calc(100vh - 66px);grid-template-columns:1fr}
+ .layout{
+  height:auto;min-height:calc(100vh - 66px);
+  grid-template-columns:1fr
+ }
  .panel{min-height:360px}
  .map-panel{height:520px;min-height:520px}
 }
@@ -99,8 +172,8 @@ a.link:hover{text-decoration:underline}
 
 <header>
  <div>
-  <div class="brand">SILKYSINGZ <span>GEOAI</span> | MAPTILER GPS & 3D INTELLIGENCE</div>
-  <div class="subtitle">Gambia Spatial Exploration • GPS Capture • 3D Terrain • Travel Time</div>
+  <div class="brand">SILKYSINGZ <span>GEOAI</span> | MAPTILER GPS, ROUTING & LoD1 3D</div>
+  <div class="subtitle">Gambia Spatial Exploration • GPS Capture • Road-Network Routing • 3D Terrain & Buildings</div>
  </div>
  <div class="status" id="headerStatus">● MAPTILER KEY REQUIRED</div>
 </header>
@@ -116,7 +189,7 @@ a.link:hover{text-decoration:underline}
  <div class="section-title">MAPTILER API CONFIGURATION</div>
 
  <label for="maptilerKey">Your MapTiler API key</label>
- <input class="key-input" id="maptilerKey" type="password" placeholder="ftpELJxuikZrGnsMKp3K">
+ <input class="key-input" id="maptilerKey" type="password" placeholder="Enter your MapTiler key">
 
  <div class="grid2" style="margin-top:8px">
   <button class="primary" id="loadMap">LOAD MAPTILER MAP</button>
@@ -189,7 +262,7 @@ a.link:hover{text-decoration:underline}
  <label for="viewMode">Viewing Mode</label>
  <select id="viewMode">
   <option value="2d">2D Map View</option>
-  <option value="3d">3D Terrain Perspective</option>
+  <option value="3d">3D Terrain + Buildings</option>
  </select>
 
  <label for="pitch">3D Perspective / Tilt</label>
@@ -208,6 +281,28 @@ a.link:hover{text-decoration:underline}
   <option value="2">2.0 – Strong</option>
   <option value="3">3.0 – Maximum display</option>
  </select>
+
+ <label for="buildingHeightScale">3D Building Height Scale</label>
+ <select id="buildingHeightScale">
+  <option value="1">1.0 – Estimated height</option>
+  <option value="1.25" selected>1.25 – Enhanced visibility</option>
+  <option value="1.5">1.5 – Strong</option>
+  <option value="2">2.0 – Maximum display</option>
+ </select>
+
+ <div class="checkrow">
+  <input type="checkbox" id="showBuildings" checked>
+  <span>Show OSM-derived LoD1-style 3D building blocks</span>
+ </div>
+
+ <button class="orange" id="refreshBuildings" style="margin-top:8px">LOAD / REFRESH 3D BUILDINGS IN VIEW</button>
+
+ <div class="note">
+  Buildings are loaded from OpenStreetMap building footprints in the current map view.
+  Building heights use mapped height or building levels where available. Missing values
+  are estimated. This is not an authoritative surveyed LoD1 building model.
+  Zoom in to approximately level 13 or higher to load buildings.
+ </div>
 
  <label for="bearing">Map Rotation</label>
  <select id="bearing">
@@ -236,22 +331,23 @@ a.link:hover{text-decoration:underline}
 
  <label for="travelMode">Travel Mode</label>
  <select id="travelMode">
-  <option value="driving">Driving – Road Network Route</option>
-  <option value="walking">Walking – Speed Estimate</option>
-  <option value="cycling">Cycling – Speed Estimate</option>
+  <option value="driving">Driving – Road Network</option>
+  <option value="walking">Walking – Path Network</option>
+  <option value="cycling">Cycling – Cycle/Road Network</option>
  </select>
 
- <button class="green" id="calculateRoute" style="margin-top:12px">CALCULATE JOURNEY</button>
+ <button class="green" id="calculateRoute" style="margin-top:12px">CALCULATE NETWORK ROUTE</button>
  <button id="clearRoute" style="margin-top:7px">CLEAR ROUTE</button>
 
  <div id="message">Enter your MapTiler key and load the map.</div>
 
  <div class="section-title">MAP LEGEND</div>
- <div class="legend-row"><span class="dot" style="background:#35a7ff"></span> Selected town / location</div>
+ <div class="legend-row"><span class="dot" style="background:#35a7ff"></span> Town / selected location</div>
  <div class="legend-row"><span class="dot" style="background:#ffad42"></span> Journey origin</div>
  <div class="legend-row"><span class="dot" style="background:#28c98b"></span> Journey destination</div>
- <div class="legend-row"><span class="dot" style="background:#e94f70"></span> Calculated route</div>
+ <div class="legend-row"><span class="dot" style="background:#e94f70"></span> Calculated network route</div>
  <div class="legend-row"><span class="dot" style="background:#ffffff"></span> Captured GPS position</div>
+ <div class="legend-row"><span class="dot" style="background:#c18cff"></span> LoD1-style 3D buildings</div>
 
 </div>
 </section>
@@ -261,9 +357,10 @@ a.link:hover{text-decoration:underline}
  <div id="map"></div>
 
  <div class="map-overlay">
-  <strong>THE GAMBIA | MAPTILER MAP</strong><br>
+  <strong>THE GAMBIA | MAPTILER GEOAI</strong><br>
   <span id="mapLocation">National overview</span><br>
-  <span id="mapCoordinates">Coordinates: --</span>
+  <span id="mapCoordinates">Coordinates: --</span><br>
+  <span id="buildingCount">3D buildings: not loaded</span>
  </div>
 
  <div class="map-tools">
@@ -272,6 +369,7 @@ a.link:hover{text-decoration:underline}
   <button id="rotateLeft">↶ ROTATE</button>
   <button id="rotateRight">ROTATE ↷</button>
   <button id="locateMap">◎ MY GPS</button>
+  <button id="loadBuildingsMap">3D BUILDINGS</button>
  </div>
 </section>
 
@@ -297,12 +395,22 @@ a.link:hover{text-decoration:underline}
   <div class="kpi">
    <div class="name">ROUTE DISTANCE</div>
    <div class="value" id="distance">--</div>
-   <small>Calculated distance</small>
+   <small>Network route length</small>
   </div>
   <div class="kpi">
    <div class="name">TRAVEL TIME</div>
    <div class="value" id="duration">--</div>
-   <small>Estimated journey time</small>
+   <small>Routing-service estimate</small>
+  </div>
+  <div class="kpi">
+   <div class="name">3D BUILDINGS</div>
+   <div class="value" id="buildingTotal">--</div>
+   <small>Loaded building footprints</small>
+  </div>
+  <div class="kpi">
+   <div class="name">ROUTE METHOD</div>
+   <div class="value" id="routeMethod" style="font-size:13px">--</div>
+   <small>Network routing profile</small>
   </div>
  </div>
 
@@ -323,6 +431,14 @@ a.link:hover{text-decoration:underline}
   <canvas id="journeyChart"></canvas>
  </div>
 
+ <div class="section-title">3D BUILDING SUMMARY</div>
+ <div class="info-card">
+  <h4>Building model information</h4>
+  <p id="buildingSummary">
+   No building footprints have been loaded. Enable 3D buildings and zoom into a built-up area.
+  </p>
+ </div>
+
  <div class="section-title">STREET-LEVEL EXPLORATION</div>
  <div class="info-card">
   <h4>Explore available street imagery</h4>
@@ -335,18 +451,38 @@ a.link:hover{text-decoration:underline}
   <a class="link" id="kartaview" target="_blank" rel="noopener">KartaView ↗</a>
  </div>
 
- <div class="section-title">3D TERRAIN VISUALISATION</div>
+ <div class="section-title">3D TERRAIN & LoD1 BUILDINGS</div>
  <div class="info-card">
-  <h4>MapTiler Terrain RGB</h4>
+  <h4>Terrain visualisation</h4>
   <p>
-   The 3D view uses MapTiler Terrain RGB elevation tiles and MapLibre terrain
+   The terrain view uses MapTiler Terrain RGB elevation tiles and MapLibre terrain
    rendering. Adjust tilt and exaggeration to explore available relief.
-   Terrain detail depends on elevation coverage and zoom level. This does
-   not automatically provide photorealistic 3D building models.
+  </p>
+ </div>
+
+ <div class="info-card">
+  <h4>LoD1-style building visualisation</h4>
+  <p>
+   Building footprints are retrieved from OpenStreetMap within the current map extent.
+   Each footprint is extruded into a simple 3D block. Available height or level attributes
+   are used where present. Missing heights are estimated using building levels or a
+   fallback height. The output is suitable for visual exploration, not engineering,
+   cadastral, structural or official building-height analysis.
   </p>
  </div>
 
  <div class="section-title">METHODOLOGY & DATA NOTES</div>
+
+ <div class="info-card">
+  <h4>Network routing methodology</h4>
+  <p>
+   The dashboard requests a route from a routing engine and draws the returned route
+   geometry. Driving, walking and cycling use different routing profiles when the
+   routing service supports them. Route distance and duration are service estimates,
+   not live traffic predictions. Availability and mapped network completeness vary.
+  </p>
+ </div>
+
  <div class="info-card">
   <h4>GPS methodology</h4>
   <p>
@@ -357,28 +493,18 @@ a.link:hover{text-decoration:underline}
  </div>
 
  <div class="info-card">
-  <h4>Travel-time methodology</h4>
-  <p>
-   Driving routes use the public OSRM road-routing service. Walking and
-   cycling are indicative estimates based on straight-line distance and
-   assumed speeds, not pedestrian or cycling network routes. Actual travel
-   time depends on road conditions, traffic and route choice.
-  </p>
- </div>
-
- <div class="info-card">
   <h4>Data limitations</h4>
   <p>
-   Town coordinates are illustrative locations, not official administrative
-   boundary centroids. This dashboard does not replace authoritative GBoS
-   boundaries or verified road-network data. MapTiler services require a
-   valid key and are subject to account limits and terms.
+   Town coordinates are illustrative locations, not official administrative centroids.
+   OSM building coverage and attribute completeness vary by location. Buildings without
+   height attributes use estimated values. This dashboard does not replace authoritative
+   GBoS boundaries, verified road data, surveyed building footprints or certified LoD1 data.
   </p>
  </div>
 
  <div class="footer">
   <strong>Produced by Ansu Singhateh</strong><br>
-  GIS Analyst | GIS-Cartography Unit<br>
+  GIS Analyst | GIS / Cartography Unit<br>
   Gambia Bureau of Statistics<br>
   GBoS GEOAI • Research and educational use
  </div>
@@ -389,8 +515,9 @@ a.link:hover{text-decoration:underline}
 
 <script>
 /* ==========================================================
-   GBoS GEOAI | MAPTILER GPS & 3D TRAVEL INTELLIGENCE
-   MapTiler + MapLibre GL JS
+   SILKYSINGZ GEOAI
+   MAPTILER + MAPLIBRE + GPS + NETWORK ROUTING
+   + OSM-DERIVED LoD1-STYLE BUILDING EXTRUSIONS
    ========================================================== */
 
 const places=[
@@ -440,6 +567,19 @@ let routeData=null;
 let currentStyle="streets-v4";
 let terrainEnabled=false;
 
+let buildingData={
+ type:"FeatureCollection",
+ features:[]
+};
+let buildingRequestKey="";
+let buildingLoading=false;
+let buildingLastLoadedAt=0;
+
+const BUILDING_SOURCE="osm-lod1-buildings";
+const BUILDING_LAYER="osm-lod1-extrusion";
+const ROUTE_SOURCE="journey";
+const ROUTE_LAYER="journey-line";
+
 /* ----------------------------------------------------------
    MAPTILER STYLE URLS
 ---------------------------------------------------------- */
@@ -464,7 +604,7 @@ function terrainURL(){
 }
 
 /* ----------------------------------------------------------
-   LOAD MAPTILER MAP
+   LOAD MAP
 ---------------------------------------------------------- */
 
 function loadMap(){
@@ -516,28 +656,33 @@ function loadMap(){
 
   map.on("load",()=>{
    $("headerStatus").textContent="● MAPTILER CONNECTED";
-   setMessage("MapTiler map loaded successfully.");
+   setMessage("MapTiler map loaded. Select an area or capture your GPS position.");
+
    installMapResources();
    addTownMarkers();
    updateStreetLinks();
    updateMapCoordinates(-15.55,13.45);
    map.resize();
+
+   if($("showBuildings").checked){
+    loadBuildingsForCurrentView(true);
+   }
   });
 
   map.on("style.load",()=>{
-   if(map && map.isStyleLoaded()){
+   if(map&&map.isStyleLoaded()){
     installMapResources();
    }
   });
 
   map.on("error",e=>{
-   if(e && e.error){
+   if(e&&e.error){
     console.warn("MapTiler / MapLibre error:",e.error);
     const message=String(e.error.message||e.error);
 
     if(/401|403|key|unauthor|forbidden/i.test(message)){
      $("headerStatus").textContent="● CHECK MAPTILER KEY";
-     setMessage("MapTiler rejected the request. Check that your API key is valid and has access to the requested maps and terrain.");
+     setMessage("MapTiler rejected a request. Check your API key and its map/terrain permissions.");
     }
    }
   });
@@ -550,6 +695,12 @@ function loadMap(){
    $("mapLocation").textContent="Selected map position";
   });
 
+  map.on("moveend",()=>{
+   if(map&&$("showBuildings").checked&&map.getZoom()>=13){
+    loadBuildingsForCurrentView(false);
+   }
+  });
+
  }catch(error){
   console.error(error);
   $("headerStatus").textContent="● MAP INITIALISATION FAILED";
@@ -558,11 +709,11 @@ function loadMap(){
 }
 
 /* ----------------------------------------------------------
-   MAP RESOURCES: TERRAIN AND ROUTE
+   MAP RESOURCES
 ---------------------------------------------------------- */
 
 function installMapResources(){
- if(!map || !map.isStyleLoaded()) return;
+ if(!map||!map.isStyleLoaded()) return;
 
  try{
   if(!map.getSource("maptiler-dem")){
@@ -573,8 +724,8 @@ function installMapResources(){
    });
   }
 
-  if(!map.getSource("journey")){
-   map.addSource("journey",{
+  if(!map.getSource(ROUTE_SOURCE)){
+   map.addSource(ROUTE_SOURCE,{
     type:"geojson",
     data:routeData||{
      type:"FeatureCollection",
@@ -583,9 +734,9 @@ function installMapResources(){
    });
 
    map.addLayer({
-    id:"journey-line",
+    id:ROUTE_LAYER,
     type:"line",
-    source:"journey",
+    source:ROUTE_SOURCE,
     layout:{
      "line-cap":"round",
      "line-join":"round"
@@ -593,12 +744,50 @@ function installMapResources(){
     paint:{
      "line-color":"#e94f70",
      "line-width":5,
-     "line-opacity":0.95
+     "line-opacity":0.98
     }
    });
   }else if(routeData){
-   map.getSource("journey").setData(routeData);
+   map.getSource(ROUTE_SOURCE).setData(routeData);
   }
+
+  if(!map.getSource(BUILDING_SOURCE)){
+   map.addSource(BUILDING_SOURCE,{
+    type:"geojson",
+    data:buildingData
+   });
+  }
+
+  if(!map.getLayer(BUILDING_LAYER)){
+   map.addLayer({
+    id:BUILDING_LAYER,
+    type:"fill-extrusion",
+    source:BUILDING_SOURCE,
+    minzoom:12.5,
+    paint:{
+     "fill-extrusion-color":[
+      "interpolate",["linear"],["get","levels"],
+      1,"#b7a0dc",
+      3,"#a17ccf",
+      6,"#8056b6",
+      12,"#633d96"
+     ],
+     "fill-extrusion-height":[
+      "*",["get","height_m"],
+      Number($("buildingHeightScale").value)
+     ],
+     "fill-extrusion-base":["get","base_m"],
+     "fill-extrusion-opacity":0.88,
+     "fill-extrusion-vertical-gradient":true
+    }
+   });
+  }
+
+  map.setLayoutProperty(
+   BUILDING_LAYER,
+   "visibility",
+   $("showBuildings").checked?"visible":"none"
+  );
 
   if(terrainEnabled){
    map.setTerrain({
@@ -609,7 +798,7 @@ function installMapResources(){
 
  }catch(error){
   console.warn("Map resources:",error);
-  setMessage("Map loaded, but a terrain or route resource could not be added. Check the MapTiler key permissions.");
+  setMessage("Map loaded, but a terrain, route or building resource could not be added. Check service access.");
  }
 }
 
@@ -624,8 +813,8 @@ function addTownMarkers(){
   new maplibregl.Marker({element:el})
    .setLngLat([p.lon,p.lat])
    .setPopup(
-    new maplibregl.Popup({offset:12}).setHTML(
-     "<strong>"+p.name+"</strong><br>"+p.region+" Region"
+    new maplibregl.Popup({offset:12}).setText(
+     p.name+" | "+p.region
     )
    )
    .addTo(map);
@@ -633,7 +822,7 @@ function addTownMarkers(){
 }
 
 /* ----------------------------------------------------------
-   CHANGE MAP STYLE
+   BASEMAP CHANGE
 ---------------------------------------------------------- */
 
 function changeBasemap(style){
@@ -643,6 +832,7 @@ function changeBasemap(style){
  }
 
  currentStyle=style;
+
  const pitch=map.getPitch();
  const bearing=map.getBearing();
  const center=map.getCenter();
@@ -662,11 +852,15 @@ function changeBasemap(style){
 
   if(gpsPosition) addGPSMarker();
   if(routeData) fitRoute();
+
+  if($("showBuildings").checked){
+   loadBuildingsForCurrentView(true);
+  }
  });
 }
 
 /* ----------------------------------------------------------
-   ADMINISTRATIVE AREA SELECTORS
+   AREA SELECTORS
 ---------------------------------------------------------- */
 
 function populateSelects(){
@@ -738,7 +932,7 @@ function selectArea(name){
  if(!p) return;
 
  $("selectedName").textContent=p.name;
- $("mapLocation").textContent=p.name+" | "+p.region+" Region";
+ $("mapLocation").textContent=p.name+" | "+p.region;
  updateStreetLinks(p.lat,p.lon);
  updateMapCoordinates(p.lon,p.lat);
 
@@ -812,7 +1006,8 @@ function captureGPS(){
    updateMapCoordinates(gpsPosition.lon,gpsPosition.lat);
    updateStreetLinks(gpsPosition.lat,gpsPosition.lon);
 
-   setMessage("GPS captured. Reported accuracy: approximately "+Math.round(gpsPosition.accuracy)+" metres.");
+   setMessage("GPS captured. Reported accuracy: approximately "+
+    Math.round(gpsPosition.accuracy)+" metres.");
   },
   error=>{
    $("getGPS").disabled=false;
@@ -869,11 +1064,10 @@ function addGPSMarker(){
  })
  .setLngLat([gpsPosition.lon,gpsPosition.lat])
  .setPopup(
-  new maplibregl.Popup({offset:15}).setHTML(
-   "<strong>My GPS Location</strong><br>"+
-   "Latitude: "+gpsPosition.lat.toFixed(6)+"<br>"+
-   "Longitude: "+gpsPosition.lon.toFixed(6)+"<br>"+
-   "Accuracy: ±"+Math.round(gpsPosition.accuracy)+" m"
+  new maplibregl.Popup({offset:15}).setText(
+   "My GPS Location | "+gpsPosition.lat.toFixed(6)+", "+
+   gpsPosition.lon.toFixed(6)+" | Accuracy ±"+
+   Math.round(gpsPosition.accuracy)+" m"
   )
  )
  .addTo(map);
@@ -984,19 +1178,21 @@ function setView(){
 
  if(is3d){
   try{
-   if(!map.getSource("maptiler-dem")){
-    installMapResources();
-   }
+   installMapResources();
 
    map.setTerrain({
     source:"maptiler-dem",
     exaggeration:Number($("exaggeration").value)
    });
 
-   setMessage("MapTiler 3D terrain enabled where elevation tiles are available.");
+   if($("showBuildings").checked){
+    loadBuildingsForCurrentView(true);
+   }
+
+   setMessage("3D terrain enabled. Building blocks will load where OSM footprints are available.");
   }catch(error){
    console.error(error);
-   setMessage("Could not enable 3D terrain. Check MapTiler key access to Terrain RGB.");
+   setMessage("Could not enable 3D terrain. Check MapTiler Terrain RGB access.");
   }
  }else{
   try{map.setTerrain(null)}catch(e){}
@@ -1005,7 +1201,434 @@ function setView(){
 }
 
 /* ----------------------------------------------------------
-   ROUTING AND DISTANCE
+   OSM BUILDING FOOTPRINTS TO LoD1-STYLE EXTRUSIONS
+---------------------------------------------------------- */
+
+function parseBuildingHeight(tags){
+ const raw=tags.height||tags["building:height"]||"";
+ const match=String(raw).match(/[\d.]+/);
+
+ if(match){
+  const h=Number(match[0]);
+  if(Number.isFinite(h)&&h>0&&h<300) return h;
+ }
+
+ const levelsRaw=tags["building:levels"]||tags.levels||"";
+ const levelsMatch=String(levelsRaw).match(/[\d.]+/);
+
+ if(levelsMatch){
+  const levels=Number(levelsMatch[0]);
+  if(Number.isFinite(levels)&&levels>0&&levels<100){
+   return Math.max(3,levels*3.0);
+  }
+ }
+
+ const building=String(tags.building||"").toLowerCase();
+
+ const defaults={
+  hut:3.2,
+  garage:3.2,
+  shed:3.5,
+  house:6.5,
+  residential:7.0,
+  apartments:10.0,
+  commercial:9.0,
+  industrial:8.0,
+  warehouse:7.0,
+  school:8.0,
+  hospital:10.0,
+  church:12.0,
+  hotel:12.0
+ };
+
+ return defaults[building]||6.0;
+}
+
+function parseBuildingBase(tags){
+ const raw=tags.min_height||tags["building:min_height"]||"";
+ const match=String(raw).match(/[\d.]+/);
+
+ if(match){
+  const h=Number(match[0]);
+  if(Number.isFinite(h)&&h>=0&&h<100) return h;
+ }
+
+ return 0;
+}
+
+function osmElementToFeature(element){
+ if(!element.geometry||element.geometry.length<4) return null;
+
+ const ring=element.geometry.map(p=>[p.lon,p.lat]);
+
+ const first=ring[0];
+ const last=ring[ring.length-1];
+
+ if(first[0]!==last[0]||first[1]!==last[1]){
+  ring.push([first[0],first[1]]);
+ }
+
+ if(ring.length<4) return null;
+
+ const tags=element.tags||{};
+ const height=parseBuildingHeight(tags);
+ const base=parseBuildingBase(tags);
+ const levelsRaw=Number(tags["building:levels"]||0);
+ const levels=Number.isFinite(levelsRaw)&&levelsRaw>0?levelsRaw:Math.max(1,Math.round(height/3));
+
+ return {
+  type:"Feature",
+  id:element.id,
+  properties:{
+   osm_id:element.id,
+   building:tags.building||"yes",
+   name:tags.name||"Unnamed building",
+   height_m:height,
+   base_m:base,
+   levels:levels,
+   height_source:
+    tags.height||tags["building:height"]?"OSM height":
+    tags["building:levels"]?"OSM building levels":"Estimated height"
+  },
+  geometry:{
+   type:"Polygon",
+   coordinates:[ring]
+  }
+ };
+}
+
+function currentBuildingBBox(){
+ const b=map.getBounds();
+
+ return {
+  west:b.getWest(),
+  south:b.getSouth(),
+  east:b.getEast(),
+  north:b.getNorth()
+ };
+}
+
+function bboxKey(b){
+ return [
+  b.west.toFixed(3),
+  b.south.toFixed(3),
+  b.east.toFixed(3),
+  b.north.toFixed(3)
+ ].join(",");
+}
+
+async function loadBuildingsForCurrentView(force){
+ if(!map||!map.isStyleLoaded()) return;
+
+ if(!$("showBuildings").checked){
+  if(map.getLayer(BUILDING_LAYER)){
+   map.setLayoutProperty(BUILDING_LAYER,"visibility","none");
+  }
+  return;
+ }
+
+ if(map.getZoom()<12.5){
+  $("buildingCount").textContent="3D buildings: zoom in to level 13+";
+  setMessage("Zoom in to approximately level 13 or higher to request building footprints.");
+  return;
+ }
+
+ if(buildingLoading) return;
+
+ const b=currentBuildingBBox();
+
+ const width=b.east-b.west;
+ const height=b.north-b.south;
+
+ if(width>0.12||height>0.12){
+  $("buildingCount").textContent="3D buildings: zoom in further";
+  setMessage("The current map extent is too large for a building query. Zoom in to a town or neighbourhood.");
+  return;
+ }
+
+ const key=bboxKey(b);
+
+ if(!force&&key===buildingRequestKey&&
+    Date.now()-buildingLastLoadedAt<60000){
+  return;
+ }
+
+ buildingLoading=true;
+ buildingRequestKey=key;
+
+ $("buildingCount").textContent="3D buildings: loading...";
+ setMessage("Retrieving OpenStreetMap building footprints for the visible map extent...");
+
+ const query=
+  '[out:json][timeout:25];' +
+  'way["building"]('+
+  b.south+','+b.west+','+b.north+','+b.east+
+  ');out body geom qt;';
+
+ try{
+  const response=await fetch(
+   "https://overpass-api.de/api/interpreter",
+   {
+    method:"POST",
+    headers:{
+     "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"
+    },
+    body:"data="+encodeURIComponent(query)
+   }
+  );
+
+  if(!response.ok){
+   throw new Error("OpenStreetMap Overpass returned HTTP "+response.status);
+  }
+
+  const result=await response.json();
+
+  const features=(result.elements||[])
+   .filter(el=>el.type==="way")
+   .map(osmElementToFeature)
+   .filter(Boolean);
+
+  buildingData={
+   type:"FeatureCollection",
+   features:features
+  };
+
+  if(map&&map.isStyleLoaded()){
+   installMapResources();
+
+   if(map.getSource(BUILDING_SOURCE)){
+    map.getSource(BUILDING_SOURCE).setData(buildingData);
+   }
+
+   if(map.getLayer(BUILDING_LAYER)){
+    map.setLayoutProperty(BUILDING_LAYER,"visibility","visible");
+   }
+  }
+
+  buildingLastLoadedAt=Date.now();
+
+  $("buildingCount").textContent=
+   "3D buildings: "+features.length.toLocaleString();
+
+  $("buildingTotal").textContent=
+   features.length.toLocaleString();
+
+  $("buildingSummary").textContent=
+   features.length.toLocaleString()+
+   " building footprints retrieved for the current map extent. "+
+   "Buildings are represented as extruded 3D blocks. "+
+   "Heights are based on mapped OSM attributes where available, "+
+   "with estimated values used when height data is missing.";
+
+  setMessage(
+   features.length?
+   "Loaded "+features.length.toLocaleString()+
+   " OSM building footprints. Tilt the map to inspect the 3D blocks.":
+   "No building footprints were returned for this map extent. OSM coverage may be limited."
+  );
+
+ }catch(error){
+  console.error("Building query failed:",error);
+
+  $("buildingCount").textContent="3D buildings: load failed";
+  $("buildingSummary").textContent=
+   "Building footprints could not be retrieved. Check your internet connection or try refreshing the building layer.";
+
+  setMessage("Building query failed: "+error.message);
+ }finally{
+  buildingLoading=false;
+ }
+}
+
+function toggleBuildings(){
+ if(!map){
+  setMessage("Load the MapTiler map first.");
+  return;
+ }
+
+ if(!$("showBuildings").checked){
+  if(map.getLayer(BUILDING_LAYER)){
+   map.setLayoutProperty(BUILDING_LAYER,"visibility","none");
+  }
+  setMessage("3D building layer hidden.");
+  return;
+ }
+
+ installMapResources();
+
+ if(map.getLayer(BUILDING_LAYER)){
+  map.setLayoutProperty(BUILDING_LAYER,"visibility","visible");
+ }
+
+ loadBuildingsForCurrentView(true);
+}
+
+function updateBuildingHeightScale(){
+ if(!map||!map.getLayer(BUILDING_LAYER)) return;
+
+ map.setPaintProperty(
+  BUILDING_LAYER,
+  "fill-extrusion-height",
+  [
+   "*",
+   ["get","height_m"],
+   Number($("buildingHeightScale").value)
+  ]
+ );
+}
+
+/* ----------------------------------------------------------
+   ROUTING: VALHALLA NETWORK ROUTING
+---------------------------------------------------------- */
+
+/*
+ Valhalla profiles:
+ auto       = driving
+ pedestrian = walking
+ bicycle    = cycling
+
+ Returned encoded polyline6 is decoded into route coordinates.
+ If the Valhalla service is unavailable, driving can fall back
+ to OSRM. OSRM fallback is for driving only.
+*/
+
+function decodePolyline6(encoded){
+ let index=0;
+ let lat=0;
+ let lon=0;
+ const coordinates=[];
+ const factor=1000000;
+
+ while(index<encoded.length){
+  let result=0;
+  let shift=0;
+  let byte;
+
+  do{
+   byte=encoded.charCodeAt(index++)-63;
+   result|=(byte&0x1f)<<shift;
+   shift+=5;
+  }while(byte>=0x20);
+
+  const deltaLat=(result&1)?~(result>>1):(result>>1);
+  lat+=deltaLat;
+
+  result=0;
+  shift=0;
+
+  do{
+   byte=encoded.charCodeAt(index++)-63;
+   result|=(byte&0x1f)<<shift;
+   shift+=5;
+  }while(byte>=0x20);
+
+  const deltaLon=(result&1)?~(result>>1):(result>>1);
+  lon+=deltaLon;
+
+  coordinates.push([lon/factor,lat/factor]);
+ }
+
+ return coordinates;
+}
+
+function valhallaCosting(mode){
+ if(mode==="walking") return "pedestrian";
+ if(mode==="cycling") return "bicycle";
+ return "auto";
+}
+
+async function requestValhallaRoute(a,b,mode){
+ const payload={
+  locations:[
+   {lat:a.lat,lon:a.lon,type:"break"},
+   {lat:b.lat,lon:b.lon,type:"break"}
+  ],
+  costing:valhallaCosting(mode),
+  units:"kilometers",
+  shape_format:"polyline6",
+  directions_options:{
+   units:"kilometers",
+   language:"en"
+  }
+ };
+
+ const url=
+  "https://valhalla1.openstreetmap.de/route?json="+
+  encodeURIComponent(JSON.stringify(payload));
+
+ const response=await fetch(url);
+
+ if(!response.ok){
+  throw new Error("Valhalla routing service returned HTTP "+response.status);
+ }
+
+ const data=await response.json();
+
+ if(data.error||!data.trip||!data.trip.legs||!data.trip.legs.length){
+  throw new Error(data.error||"No network route returned.");
+ }
+
+ const coordinates=[];
+
+ data.trip.legs.forEach(leg=>{
+  if(leg.shape){
+   const decoded=decodePolyline6(leg.shape);
+   decoded.forEach(c=>coordinates.push(c));
+  }
+ });
+
+ if(coordinates.length<2){
+  throw new Error("The routing service returned no usable route geometry.");
+ }
+
+ const lengthKm=Number(data.trip.summary.length);
+ const timeSeconds=Number(data.trip.summary.time);
+
+ if(!Number.isFinite(lengthKm)||!Number.isFinite(timeSeconds)){
+  throw new Error("The routing response did not include valid distance and duration.");
+ }
+
+ return {
+  geometry:{
+   type:"LineString",
+   coordinates:coordinates
+  },
+  distance:lengthKm,
+  minutes:timeSeconds/60,
+  method:"Valhalla "+valhallaCosting(mode)+" network route"
+ };
+}
+
+async function requestOSRMDrivingRoute(a,b){
+ const url=
+  "https://router.project-osrm.org/route/v1/driving/"+
+  a.lon+","+a.lat+";"+b.lon+","+b.lat+
+  "?overview=full&geometries=geojson&steps=false";
+
+ const response=await fetch(url);
+
+ if(!response.ok){
+  throw new Error("OSRM returned HTTP "+response.status);
+ }
+
+ const data=await response.json();
+
+ if(data.code!=="Ok"||!data.routes||!data.routes.length){
+  throw new Error("OSRM did not return a driving route.");
+ }
+
+ const route=data.routes[0];
+
+ return {
+  geometry:route.geometry,
+  distance:route.distance/1000,
+  minutes:route.duration/60,
+  method:"OSRM driving road-network route"
+ };
+}
+
+/* ----------------------------------------------------------
+   DISTANCE / ROUTE DISPLAY
 ---------------------------------------------------------- */
 
 function haversine(a,b){
@@ -1024,8 +1647,10 @@ function haversine(a,b){
 
 function formatDuration(minutes){
  if(!Number.isFinite(minutes)) return "--";
+
  const h=Math.floor(minutes/60);
  const m=Math.round(minutes%60);
+
  return h>0?h+" h "+m+" min":m+" min";
 }
 
@@ -1055,13 +1680,17 @@ function setRouteData(geometry){
   type:"FeatureCollection",
   features:[{
    type:"Feature",
-   properties:{name:"Journey route"},
+   properties:{name:"Calculated network route"},
    geometry:geometry
   }]
  };
 
  if(map&&map.isStyleLoaded()){
   installMapResources();
+
+  if(map.getSource(ROUTE_SOURCE)){
+   map.getSource(ROUTE_SOURCE).setData(routeData);
+  }
  }
 }
 
@@ -1075,11 +1704,15 @@ function fitRoute(){
  coords.forEach(c=>bounds.extend(c));
 
  map.fitBounds(bounds,{
-  padding:70,
-  maxZoom:13,
+  padding:80,
+  maxZoom:14,
   duration:900
  });
 }
+
+/* ----------------------------------------------------------
+   CALCULATE JOURNEY
+---------------------------------------------------------- */
 
 async function calculateJourney(){
  if(!map){
@@ -1101,93 +1734,78 @@ async function calculateJourney(){
   return;
  }
 
- if(a.name===b.name){
+ if(a.lat===b.lat&&a.lon===b.lon){
   setMessage("Choose two different locations.");
   return;
  }
 
  $("calculateRoute").disabled=true;
- setMessage("Calculating journey...");
-
- const straightDistance=haversine(a,b);
- let distance=straightDistance;
- let minutes=0;
- let method="Straight-line estimate";
-
- let geometry={
-  type:"LineString",
-  coordinates:[[a.lon,a.lat],[b.lon,b.lat]]
- };
+ $("calculateRoute").textContent="CALCULATING NETWORK ROUTE...";
+ setMessage("Requesting a real network route. This may take a few seconds...");
 
  try{
-  if(mode==="driving"){
-   const url=
-    "https://router.project-osrm.org/route/v1/driving/"+
-    a.lon+","+a.lat+";"+b.lon+","+b.lat+
-    "?overview=full&geometries=geojson&steps=false";
+  let result;
 
-   const response=await fetch(url);
+  try{
+   result=await requestValhallaRoute(a,b,mode);
+  }catch(valhallaError){
+   console.warn("Valhalla route failed:",valhallaError);
 
-   if(!response.ok){
-    throw new Error("Routing service returned HTTP "+response.status);
+   if(mode==="driving"){
+    setMessage("Primary routing service unavailable. Trying OSRM driving route...");
+    result=await requestOSRMDrivingRoute(a,b);
+   }else{
+    throw valhallaError;
    }
-
-   const data=await response.json();
-
-   if(data.code!=="Ok"||!data.routes||!data.routes.length){
-    throw new Error("No driving route was returned.");
-   }
-
-   const route=data.routes[0];
-   distance=route.distance/1000;
-   minutes=route.duration/60;
-   geometry=route.geometry;
-   method="OSRM road-network route";
-
-  }else{
-   const factor=mode==="walking"?1.25:1.18;
-   const speed=mode==="walking"?4.5:15;
-
-   distance=straightDistance*factor;
-   minutes=(distance/speed)*60;
-
-   method=mode==="walking"
-    ?"Walking estimate using assumed 4.5 km/h"
-    :"Cycling estimate using assumed 15 km/h";
   }
 
-  setRouteData(geometry);
+  const straightDistance=haversine(a,b);
+
+  setRouteData(result.geometry);
   addRouteMarkers(a,b);
   fitRoute();
 
-  $("distance").textContent=distance.toFixed(1)+" km";
-  $("duration").textContent=formatDuration(minutes);
+  $("distance").textContent=result.distance.toFixed(1)+" km";
+  $("duration").textContent=formatDuration(result.minutes);
+  $("routeMethod").textContent=
+   mode==="driving"?"DRIVING":
+   mode==="walking"?"WALKING":"CYCLING";
 
   $("journeyTitle").textContent=a.name+" → "+b.name;
 
   $("journeyDescription").textContent=
-   "Estimated distance: "+distance.toFixed(1)+" km. "+
-   "Estimated travel time: "+formatDuration(minutes)+". "+
+   "Network route distance: "+result.distance.toFixed(1)+" km. "+
+   "Estimated journey time: "+formatDuration(result.minutes)+". "+
    "Straight-line distance: "+straightDistance.toFixed(1)+" km. "+
-   "Method: "+method+".";
+   "Routing method: "+result.method+". "+
+   "The red line represents the returned route geometry.";
 
-  updateChart(distance,minutes);
-  setMessage("Journey calculation completed. Method: "+method+".");
+  updateChart(result.distance,result.minutes);
+
+  setMessage(
+   "Network route calculated successfully. "+
+   result.method+". The displayed line follows the returned route geometry."
+  );
 
  }catch(error){
   console.error(error);
 
   $("distance").textContent="--";
   $("duration").textContent="--";
-  $("journeyTitle").textContent="Journey route unavailable";
+  $("routeMethod").textContent="UNAVAILABLE";
+
+  $("journeyTitle").textContent="Network route unavailable";
   $("journeyDescription").textContent=
-   "The routing service did not return a route. Check your connection or try again later. "+
+   "The routing service did not return a usable network route. "+
+   "No straight-line route has been substituted. "+
+   "Check your internet connection or try again later. "+
    "Error: "+error.message;
 
-  setMessage("Journey calculation failed: "+error.message);
+  setMessage("Network routing failed: "+error.message);
 
  }finally{
   $("calculateRoute").disabled=false;
+  $("calculateRoute").textContent="CALCULATE NETWORK ROUTE";
  }
 }
 
@@ -1199,6 +1817,7 @@ function updateChart(distance,minutes){
  if(typeof Chart==="undefined") return;
 
  const ctx=$("journeyChart").getContext("2d");
+
  if(chart) chart.destroy();
 
  chart=new Chart(ctx,{
@@ -1206,7 +1825,7 @@ function updateChart(distance,minutes){
   data:{
    labels:["Distance (km)","Travel time (min)"],
    datasets:[{
-    label:"Journey summary",
+    label:"Network journey",
     data:[distance,minutes],
     backgroundColor:["#35a7ff","#28c98b"],
     borderRadius:5
@@ -1220,8 +1839,15 @@ function updateChart(distance,minutes){
     tooltip:{enabled:true}
    },
    scales:{
-    x:{ticks:{color:"#cbd8e8"},grid:{display:false}},
-    y:{beginAtZero:true,ticks:{color:"#9aadc3"},grid:{color:"#263a52"}}
+    x:{
+     ticks:{color:"#cbd8e8"},
+     grid:{display:false}
+    },
+    y:{
+     beginAtZero:true,
+     ticks:{color:"#9aadc3"},
+     grid:{color:"#263a52"}
+    }
    }
   }
  });
@@ -1231,8 +1857,8 @@ function clearJourney(){
  routeData=null;
  clearRouteMarkers();
 
- if(map&&map.getSource("journey")){
-  map.getSource("journey").setData({
+ if(map&&map.getSource(ROUTE_SOURCE)){
+  map.getSource(ROUTE_SOURCE).setData({
    type:"FeatureCollection",
    features:[]
   });
@@ -1240,6 +1866,7 @@ function clearJourney(){
 
  $("distance").textContent="--";
  $("duration").textContent="--";
+ $("routeMethod").textContent="--";
  $("journeyTitle").textContent="No journey calculated";
  $("journeyDescription").textContent=
   "Select an origin and destination, then calculate the journey.";
@@ -1253,7 +1880,7 @@ function clearJourney(){
 }
 
 /* ----------------------------------------------------------
-   RESET
+   RESET MAP
 ---------------------------------------------------------- */
 
 function resetMap(){
@@ -1266,12 +1893,12 @@ function resetMap(){
   center:[-15.55,13.45],
   zoom:7.2,
   pitch:0,
-  bearing:0,
-  speed:0.8
+  bearing:0
  });
 
  $("region").value="all";
  $("region").dispatchEvent(new Event("change"));
+
  $("viewMode").value="2d";
  $("pitch").value="0";
  $("bearing").value="0";
@@ -1280,7 +1907,8 @@ function resetMap(){
 
  $("mapLocation").textContent="National overview";
  updateMapCoordinates(-15.55,13.45);
- setMessage("National view restored.");
+
+ setMessage("National view restored. Zoom in to load detailed 3D building footprints.");
 }
 
 /* ----------------------------------------------------------
@@ -1337,6 +1965,28 @@ $("pitch").addEventListener("change",()=>{
 
 $("exaggeration").addEventListener("change",()=>{
  if($("viewMode").value==="3d") setView();
+});
+
+$("buildingHeightScale").addEventListener("change",updateBuildingHeightScale);
+
+$("showBuildings").addEventListener("change",toggleBuildings);
+
+$("refreshBuildings").addEventListener("click",()=>{
+ loadBuildingsForCurrentView(true);
+});
+
+$("loadBuildingsMap").addEventListener("click",()=>{
+ if(!map){
+  setMessage("Load MapTiler first.");
+  return;
+ }
+
+ $("showBuildings").checked=true;
+ toggleBuildings();
+
+ if(map.getZoom()<13){
+  map.easeTo({zoom:13.5,duration:700});
+ }
 });
 
 $("bearing").addEventListener("change",e=>{
