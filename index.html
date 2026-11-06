@@ -1,0 +1,1386 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SILKYSINGZ GEOAI | GAMBIA MAPTILER GPS & 3D INTELLIGENCE</title>
+
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+<style>
+:root{
+ --bg:#07111f;--panel:#101e30;--panel2:#15263b;
+ --line:#263a52;--text:#edf4fc;--muted:#9aadc3;
+ --blue:#35a7ff;--green:#28c98b;--orange:#ffad42;--red:#ff6474;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+header{
+ height:66px;padding:10px 18px;background:#0b1727;
+ border-bottom:1px solid var(--line);display:flex;
+ align-items:center;justify-content:space-between;gap:10px
+}
+.brand{font-size:17px;font-weight:800;letter-spacing:.5px}
+.brand span{color:var(--blue)}
+.subtitle{font-size:11px;color:var(--muted);margin-top:4px}
+.status{font-size:11px;color:var(--green);border:1px solid #245d4b;padding:7px 10px;border-radius:20px}
+.layout{
+ height:calc(100vh - 66px);
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
+ gap:9px;padding:9px
+}
+.panel{
+ background:var(--panel);border:1px solid var(--line);border-radius:10px;
+ min-width:0;min-height:0;overflow-y:auto;
+ scrollbar-width:thin;scrollbar-color:#38516d transparent
+}
+.panel-inner{padding:14px}
+.panel-title{font-size:13px;font-weight:800;letter-spacing:.8px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.section-title{color:var(--blue);font-size:11px;font-weight:800;margin:18px 0 9px;letter-spacing:.7px}
+label{display:block;font-size:11px;color:var(--muted);margin:10px 0 5px}
+input,select,button{
+ width:100%;padding:10px;background:var(--panel2);color:var(--text);
+ border:1px solid var(--line);border-radius:6px;font-size:12px;outline:none
+}
+input::placeholder{color:#748ba4}
+button{cursor:pointer;font-weight:700}
+button:hover{border-color:var(--blue);background:#1a3450}
+button.primary{background:#1265a2;border-color:#248bd0}
+button.green{background:#126447;border-color:#1c9b6b}
+button.orange{background:#76501c;border-color:#a8762b}
+button.red{background:#702b3a;border-color:#a94256}
+button:disabled{opacity:.5;cursor:not-allowed}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.note{font-size:10px;line-height:1.5;color:var(--muted);padding:9px;background:#0b1929;border-radius:6px;margin-top:9px}
+.map-panel{position:relative;overflow:hidden;padding:0}
+#map{height:100%;width:100%;background:#dce5ed}
+.map-overlay{
+ position:absolute;z-index:5;top:12px;left:12px;
+ background:#07111fe8;padding:10px 12px;border-radius:7px;
+ border:1px solid #39516b;font-size:11px;pointer-events:none;max-width:80%
+}
+.map-tools{position:absolute;z-index:5;bottom:14px;left:12px;right:12px;display:flex;gap:7px;flex-wrap:wrap}
+.map-tools button{width:auto;padding:9px 12px;background:#0b1929ed}
+.maplibregl-ctrl-group{background:#14263a!important}
+.maplibregl-ctrl button{background-color:#14263a!important}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kpi{padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;min-width:0}
+.kpi .value{font-size:19px;font-weight:800;color:var(--green);margin-top:7px;overflow-wrap:anywhere}
+.kpi .name{font-size:10px;color:var(--muted)}
+.kpi small{font-size:9px;color:var(--muted)}
+.chart-wrap{background:#0b1929;border:1px solid var(--line);border-radius:8px;padding:10px;margin-top:10px;height:220px}
+.info-card{padding:11px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;margin-top:9px}
+.info-card h4{font-size:12px;margin:0 0 7px}
+.info-card p{font-size:11px;color:var(--muted);line-height:1.6;margin:0;overflow-wrap:anywhere}
+a.link{display:inline-block;color:#67c0ff;font-size:11px;margin:7px 12px 0 0;text-decoration:none}
+a.link:hover{text-decoration:underline}
+.footer{font-size:10px;color:var(--muted);line-height:1.6;padding:12px;border-top:1px solid var(--line);margin-top:18px}
+#message{font-size:11px;color:var(--orange);line-height:1.5;margin-top:9px;white-space:pre-wrap;overflow-wrap:anywhere}
+.legend-row{display:flex;gap:7px;align-items:center;margin:7px 0;font-size:10px;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
+.coordinate{font-family:monospace;font-size:11px;line-height:1.8;color:#d5e6f8;overflow-wrap:anywhere}
+.gps-status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--green);margin-top:8px}
+.gps-indicator{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+.key-input{font-family:monospace}
+@media(max-width:900px){
+ body{overflow:auto}
+ header{height:auto;min-height:66px}
+ .layout{height:auto;min-height:calc(100vh - 66px);grid-template-columns:1fr}
+ .panel{min-height:360px}
+ .map-panel{height:520px;min-height:520px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div>
+  <div class="brand">SILKYSINGZ <span>GEOAI</span> | MAPTILER GPS & 3D INTELLIGENCE</div>
+  <div class="subtitle">Gambia Spatial Exploration • GPS Capture • 3D Terrain • Travel Time</div>
+ </div>
+ <div class="status" id="headerStatus">● MAPTILER KEY REQUIRED</div>
+</header>
+
+<main class="layout">
+
+<!-- LEFT PANEL -->
+<section class="panel">
+<div class="panel-inner">
+
+ <div class="panel-title">01 | CONTROLS & GPS LOCATION</div>
+
+ <div class="section-title">MAPTILER API CONFIGURATION</div>
+
+ <label for="maptilerKey">Your MapTiler API key</label>
+ <input class="key-input" id="maptilerKey" type="password" placeholder="ftpELJxuikZrGnsMKp3K">
+
+ <div class="grid2" style="margin-top:8px">
+  <button class="primary" id="loadMap">LOAD MAPTILER MAP</button>
+  <button id="showKey">SHOW / HIDE KEY</button>
+ </div>
+
+ <div class="note">
+  Obtain a key from
+  <a class="link" href="https://cloud.maptiler.com/" target="_blank" rel="noopener">MapTiler Cloud ↗</a>.
+  The key is used in this browser session. Restrict it to your website domain before publishing.
+ </div>
+
+ <div class="section-title">GPS LOCATION CAPTURE</div>
+
+ <button class="green" id="getGPS">◎ CAPTURE MY CURRENT GPS LOCATION</button>
+
+ <div class="grid2" style="margin-top:8px">
+  <button id="useGPSOrigin">USE GPS AS ORIGIN</button>
+  <button id="clearGPS">CLEAR GPS</button>
+ </div>
+
+ <div class="info-card">
+  <h4>Captured GPS coordinates</h4>
+  <div class="coordinate" id="gpsCoordinates">
+   Latitude: Not captured<br>
+   Longitude: Not captured<br>
+   Accuracy: Not available
+  </div>
+  <div class="gps-status" id="gpsStatus">
+   <span class="gps-indicator"></span> GPS not yet captured
+  </div>
+  <button id="copyGPS" style="margin-top:9px">COPY GPS COORDINATES</button>
+ </div>
+
+ <div class="note">
+  GPS requires browser location permission and HTTPS or localhost.
+  GPS accuracy depends on your device and satellite visibility.
+ </div>
+
+ <div class="section-title">STUDY AREA SELECTION</div>
+
+ <label for="region">Region / Administrative Area</label>
+ <select id="region">
+  <option value="all">The Gambia – National View</option>
+  <option value="Banjul">Banjul</option>
+  <option value="Kanifing">Kanifing</option>
+  <option value="West Coast">West Coast Region</option>
+  <option value="North Bank">North Bank Region</option>
+  <option value="Lower River">Lower River Region</option>
+  <option value="Central River">Central River Region</option>
+  <option value="Upper River">Upper River Region</option>
+ </select>
+
+ <label for="area">Select Town / Location</label>
+ <select id="area"></select>
+ <button class="primary" id="zoomArea" style="margin-top:9px">ZOOM TO SELECTED AREA</button>
+
+ <div class="section-title">MAPTILER MAP STYLE</div>
+
+ <label for="basemap">Basemap</label>
+ <select id="basemap">
+  <option value="streets-v4">MapTiler Streets</option>
+  <option value="satellite">MapTiler Satellite</option>
+  <option value="hybrid">MapTiler Hybrid</option>
+  <option value="topo-v2">MapTiler Topographic</option>
+  <option value="outdoor-v2">MapTiler Outdoor</option>
+  <option value="dataviz-dark">MapTiler DataViz Dark</option>
+ </select>
+
+ <label for="viewMode">Viewing Mode</label>
+ <select id="viewMode">
+  <option value="2d">2D Map View</option>
+  <option value="3d">3D Terrain Perspective</option>
+ </select>
+
+ <label for="pitch">3D Perspective / Tilt</label>
+ <select id="pitch">
+  <option value="0">0° – Flat</option>
+  <option value="30">30°</option>
+  <option value="45">45°</option>
+  <option value="60" selected>60°</option>
+  <option value="75">75°</option>
+ </select>
+
+ <label for="exaggeration">Terrain Elevation Exaggeration</label>
+ <select id="exaggeration">
+  <option value="1">1.0 – Natural scale</option>
+  <option value="1.5" selected>1.5 – Enhanced</option>
+  <option value="2">2.0 – Strong</option>
+  <option value="3">3.0 – Maximum display</option>
+ </select>
+
+ <label for="bearing">Map Rotation</label>
+ <select id="bearing">
+  <option value="0">North Up – 0°</option>
+  <option value="45">45°</option>
+  <option value="90">90°</option>
+  <option value="135">135°</option>
+  <option value="180">180°</option>
+  <option value="270">270°</option>
+ </select>
+
+ <div class="grid2" style="margin-top:9px">
+  <button id="northUp">NORTH UP</button>
+  <button id="resetMap">RESET MAP</button>
+ </div>
+
+ <div class="section-title">TRAVEL & ROUTE ANALYSIS</div>
+
+ <label for="origin">Journey Origin</label>
+ <select id="origin">
+  <option value="gps">My GPS Location</option>
+ </select>
+
+ <label for="destination">Journey Destination</label>
+ <select id="destination"></select>
+
+ <label for="travelMode">Travel Mode</label>
+ <select id="travelMode">
+  <option value="driving">Driving – Road Network Route</option>
+  <option value="walking">Walking – Speed Estimate</option>
+  <option value="cycling">Cycling – Speed Estimate</option>
+ </select>
+
+ <button class="green" id="calculateRoute" style="margin-top:12px">CALCULATE JOURNEY</button>
+ <button id="clearRoute" style="margin-top:7px">CLEAR ROUTE</button>
+
+ <div id="message">Enter your MapTiler key and load the map.</div>
+
+ <div class="section-title">MAP LEGEND</div>
+ <div class="legend-row"><span class="dot" style="background:#35a7ff"></span> Selected town / location</div>
+ <div class="legend-row"><span class="dot" style="background:#ffad42"></span> Journey origin</div>
+ <div class="legend-row"><span class="dot" style="background:#28c98b"></span> Journey destination</div>
+ <div class="legend-row"><span class="dot" style="background:#e94f70"></span> Calculated route</div>
+ <div class="legend-row"><span class="dot" style="background:#ffffff"></span> Captured GPS position</div>
+
+</div>
+</section>
+
+<!-- CENTRE MAP -->
+<section class="panel map-panel">
+ <div id="map"></div>
+
+ <div class="map-overlay">
+  <strong>THE GAMBIA | MAPTILER MAP</strong><br>
+  <span id="mapLocation">National overview</span><br>
+  <span id="mapCoordinates">Coordinates: --</span>
+ </div>
+
+ <div class="map-tools">
+  <button id="tiltUp">3D TILT</button>
+  <button id="tiltDown">FLAT VIEW</button>
+  <button id="rotateLeft">↶ ROTATE</button>
+  <button id="rotateRight">ROTATE ↷</button>
+  <button id="locateMap">◎ MY GPS</button>
+ </div>
+</section>
+
+<!-- RIGHT PANEL -->
+<section class="panel">
+<div class="panel-inner">
+
+ <div class="panel-title">02 | ANALYTICS & LOCATION INTELLIGENCE</div>
+
+ <div class="section-title">SELECTED LOCATION</div>
+
+ <div class="kpis">
+  <div class="kpi">
+   <div class="name">SELECTED AREA</div>
+   <div class="value" id="selectedName" style="font-size:16px">Gambia</div>
+   <small>Current map selection</small>
+  </div>
+  <div class="kpi">
+   <div class="name">MAP VIEW</div>
+   <div class="value" id="viewLabel">2D</div>
+   <small>Viewing configuration</small>
+  </div>
+  <div class="kpi">
+   <div class="name">ROUTE DISTANCE</div>
+   <div class="value" id="distance">--</div>
+   <small>Calculated distance</small>
+  </div>
+  <div class="kpi">
+   <div class="name">TRAVEL TIME</div>
+   <div class="value" id="duration">--</div>
+   <small>Estimated journey time</small>
+  </div>
+ </div>
+
+ <div class="section-title">GPS LOCATION SUMMARY</div>
+ <div class="info-card">
+  <h4>Current device location</h4>
+  <p id="gpsSummary">No GPS position has been captured.</p>
+ </div>
+
+ <div class="section-title">JOURNEY SUMMARY</div>
+ <div class="info-card">
+  <h4 id="journeyTitle">No journey calculated</h4>
+  <p id="journeyDescription">Select an origin and destination, then calculate the journey.</p>
+ </div>
+
+ <div class="chart-wrap">
+  <div style="font-size:11px;font-weight:bold;margin-bottom:8px">JOURNEY DISTANCE & TIME</div>
+  <canvas id="journeyChart"></canvas>
+ </div>
+
+ <div class="section-title">STREET-LEVEL EXPLORATION</div>
+ <div class="info-card">
+  <h4>Explore available street imagery</h4>
+  <p>
+   Open external street-level imagery viewers around the selected location.
+   Coverage depends on available imagery.
+  </p>
+  <a class="link" id="googleStreet" target="_blank" rel="noopener">Google Street View ↗</a>
+  <a class="link" id="mapillary" target="_blank" rel="noopener">Mapillary ↗</a>
+  <a class="link" id="kartaview" target="_blank" rel="noopener">KartaView ↗</a>
+ </div>
+
+ <div class="section-title">3D TERRAIN VISUALISATION</div>
+ <div class="info-card">
+  <h4>MapTiler Terrain RGB</h4>
+  <p>
+   The 3D view uses MapTiler Terrain RGB elevation tiles and MapLibre terrain
+   rendering. Adjust tilt and exaggeration to explore available relief.
+   Terrain detail depends on elevation coverage and zoom level. This does
+   not automatically provide photorealistic 3D building models.
+  </p>
+ </div>
+
+ <div class="section-title">METHODOLOGY & DATA NOTES</div>
+ <div class="info-card">
+  <h4>GPS methodology</h4>
+  <p>
+   Device coordinates are obtained through the browser Geolocation API.
+   Accuracy is reported by the device and may vary with satellite visibility,
+   hardware, network conditions and obstructions.
+  </p>
+ </div>
+
+ <div class="info-card">
+  <h4>Travel-time methodology</h4>
+  <p>
+   Driving routes use the public OSRM road-routing service. Walking and
+   cycling are indicative estimates based on straight-line distance and
+   assumed speeds, not pedestrian or cycling network routes. Actual travel
+   time depends on road conditions, traffic and route choice.
+  </p>
+ </div>
+
+ <div class="info-card">
+  <h4>Data limitations</h4>
+  <p>
+   Town coordinates are illustrative locations, not official administrative
+   boundary centroids. This dashboard does not replace authoritative GBoS
+   boundaries or verified road-network data. MapTiler services require a
+   valid key and are subject to account limits and terms.
+  </p>
+ </div>
+
+ <div class="footer">
+  <strong>Produced by Ansu Singhateh</strong><br>
+  GIS Analyst | GIS-Cartography Unit<br>
+  Gambia Bureau of Statistics<br>
+  GBoS GEOAI • Research and educational use
+ </div>
+
+</div>
+</section>
+</main>
+
+<script>
+/* ==========================================================
+   GBoS GEOAI | MAPTILER GPS & 3D TRAVEL INTELLIGENCE
+   MapTiler + MapLibre GL JS
+   ========================================================== */
+
+const places=[
+ {name:"Banjul",region:"Banjul",lat:13.4549,lon:-16.5790},
+ {name:"Bakau",region:"Kanifing",lat:13.4781,lon:-16.6810},
+ {name:"Serekunda",region:"Kanifing",lat:13.4390,lon:-16.6780},
+ {name:"Kanifing",region:"Kanifing",lat:13.4550,lon:-16.6750},
+ {name:"Kololi",region:"Kanifing",lat:13.4470,lon:-16.7180},
+ {name:"Kotu",region:"Kanifing",lat:13.4660,lon:-16.7100},
+ {name:"Brikama",region:"West Coast",lat:13.2710,lon:-16.6490},
+ {name:"Sukuta",region:"West Coast",lat:13.4100,lon:-16.7080},
+ {name:"Lamin",region:"West Coast",lat:13.3520,lon:-16.6810},
+ {name:"Gunjur",region:"West Coast",lat:13.2010,lon:-16.7580},
+ {name:"Sanyang",region:"West Coast",lat:13.2650,lon:-16.7700},
+ {name:"Farafenni",region:"North Bank",lat:13.5670,lon:-15.5950},
+ {name:"Kerewan",region:"North Bank",lat:13.4890,lon:-16.0880},
+ {name:"Barra",region:"North Bank",lat:13.4820,lon:-16.5450},
+ {name:"Soma",region:"Lower River",lat:13.4330,lon:-15.5350},
+ {name:"Janjanbureh",region:"Central River",lat:13.5330,lon:-14.7670},
+ {name:"Kuntaur",region:"Central River",lat:13.6700,lon:-14.8830},
+ {name:"Basse Santa Su",region:"Upper River",lat:13.3100,lon:-14.2200},
+ {name:"Fatoto",region:"Upper River",lat:13.1800,lon:-14.0800}
+];
+
+const regionCenters={
+ all:{lat:13.45,lon:-15.55,zoom:7.2},
+ "Banjul":{lat:13.4549,lon:-16.5790,zoom:12},
+ "Kanifing":{lat:13.4550,lon:-16.6900,zoom:11},
+ "West Coast":{lat:13.30,lon:-16.70,zoom:9.5},
+ "North Bank":{lat:13.53,lon:-16.10,zoom:8.5},
+ "Lower River":{lat:13.43,lon:-15.53,zoom:9},
+ "Central River":{lat:13.60,lon:-14.83,zoom:8.5},
+ "Upper River":{lat:13.27,lon:-14.30,zoom:8.5}
+};
+
+const $=id=>document.getElementById(id);
+const setMessage=msg=>$("message").textContent=msg;
+
+let map=null;
+let mapKey="";
+let chart=null;
+let gpsPosition=null;
+let gpsMarker=null;
+let selectedMarker=null;
+let routeMarkers=[];
+let routeData=null;
+let currentStyle="streets-v4";
+let terrainEnabled=false;
+
+/* ----------------------------------------------------------
+   MAPTILER STYLE URLS
+---------------------------------------------------------- */
+
+const mapStyles={
+ "streets-v4":"streets-v4",
+ "satellite":"satellite",
+ "hybrid":"hybrid",
+ "topo-v2":"topo-v2",
+ "outdoor-v2":"outdoor-v2",
+ "dataviz-dark":"dataviz-dark"
+};
+
+function styleURL(style){
+ return "https://api.maptiler.com/maps/"+
+  mapStyles[style]+"/style.json?key="+encodeURIComponent(mapKey);
+}
+
+function terrainURL(){
+ return "https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key="+
+  encodeURIComponent(mapKey);
+}
+
+/* ----------------------------------------------------------
+   LOAD MAPTILER MAP
+---------------------------------------------------------- */
+
+function loadMap(){
+ const key=$("maptilerKey").value.trim();
+
+ if(!key){
+  setMessage("Enter your MapTiler API key before loading the map.");
+  $("headerStatus").textContent="● MAPTILER KEY REQUIRED";
+  return;
+ }
+
+ if(typeof maplibregl==="undefined"){
+  setMessage("MapLibre failed to load. Check your internet connection.");
+  return;
+ }
+
+ mapKey=key;
+ currentStyle=$("basemap").value;
+
+ if(map){
+  try{map.remove()}catch(e){}
+  map=null;
+ }
+
+ $("headerStatus").textContent="● LOADING MAPTILER";
+ setMessage("Connecting to MapTiler...");
+
+ try{
+  map=new maplibregl.Map({
+   container:"map",
+   style:styleURL(currentStyle),
+   center:[-15.55,13.45],
+   zoom:7.2,
+   pitch:0,
+   bearing:0,
+   maxPitch:85,
+   attributionControl:true
+  });
+
+  map.addControl(
+   new maplibregl.NavigationControl({visualizePitch:true}),
+   "top-right"
+  );
+
+  map.addControl(
+   new maplibregl.ScaleControl({unit:"metric"}),
+   "bottom-right"
+  );
+
+  map.on("load",()=>{
+   $("headerStatus").textContent="● MAPTILER CONNECTED";
+   setMessage("MapTiler map loaded successfully.");
+   installMapResources();
+   addTownMarkers();
+   updateStreetLinks();
+   updateMapCoordinates(-15.55,13.45);
+   map.resize();
+  });
+
+  map.on("style.load",()=>{
+   if(map && map.isStyleLoaded()){
+    installMapResources();
+   }
+  });
+
+  map.on("error",e=>{
+   if(e && e.error){
+    console.warn("MapTiler / MapLibre error:",e.error);
+    const message=String(e.error.message||e.error);
+
+    if(/401|403|key|unauthor|forbidden/i.test(message)){
+     $("headerStatus").textContent="● CHECK MAPTILER KEY";
+     setMessage("MapTiler rejected the request. Check that your API key is valid and has access to the requested maps and terrain.");
+    }
+   }
+  });
+
+  map.on("click",e=>{
+   const lat=e.lngLat.lat;
+   const lon=e.lngLat.lng;
+   updateStreetLinks(lat,lon);
+   updateMapCoordinates(lon,lat);
+   $("mapLocation").textContent="Selected map position";
+  });
+
+ }catch(error){
+  console.error(error);
+  $("headerStatus").textContent="● MAP INITIALISATION FAILED";
+  setMessage("Could not initialise MapTiler: "+error.message);
+ }
+}
+
+/* ----------------------------------------------------------
+   MAP RESOURCES: TERRAIN AND ROUTE
+---------------------------------------------------------- */
+
+function installMapResources(){
+ if(!map || !map.isStyleLoaded()) return;
+
+ try{
+  if(!map.getSource("maptiler-dem")){
+   map.addSource("maptiler-dem",{
+    type:"raster-dem",
+    url:terrainURL(),
+    tileSize:256
+   });
+  }
+
+  if(!map.getSource("journey")){
+   map.addSource("journey",{
+    type:"geojson",
+    data:routeData||{
+     type:"FeatureCollection",
+     features:[]
+    }
+   });
+
+   map.addLayer({
+    id:"journey-line",
+    type:"line",
+    source:"journey",
+    layout:{
+     "line-cap":"round",
+     "line-join":"round"
+    },
+    paint:{
+     "line-color":"#e94f70",
+     "line-width":5,
+     "line-opacity":0.95
+    }
+   });
+  }else if(routeData){
+   map.getSource("journey").setData(routeData);
+  }
+
+  if(terrainEnabled){
+   map.setTerrain({
+    source:"maptiler-dem",
+    exaggeration:Number($("exaggeration").value)
+   });
+  }
+
+ }catch(error){
+  console.warn("Map resources:",error);
+  setMessage("Map loaded, but a terrain or route resource could not be added. Check the MapTiler key permissions.");
+ }
+}
+
+function addTownMarkers(){
+ if(!map) return;
+
+ places.forEach(p=>{
+  const el=document.createElement("div");
+  el.style.cssText=
+   "width:10px;height:10px;background:#35a7ff;border:2px solid white;border-radius:50%;cursor:pointer";
+
+  new maplibregl.Marker({element:el})
+   .setLngLat([p.lon,p.lat])
+   .setPopup(
+    new maplibregl.Popup({offset:12}).setHTML(
+     "<strong>"+p.name+"</strong><br>"+p.region+" Region"
+    )
+   )
+   .addTo(map);
+ });
+}
+
+/* ----------------------------------------------------------
+   CHANGE MAP STYLE
+---------------------------------------------------------- */
+
+function changeBasemap(style){
+ if(!map){
+  setMessage("Load MapTiler first.");
+  return;
+ }
+
+ currentStyle=style;
+ const pitch=map.getPitch();
+ const bearing=map.getBearing();
+ const center=map.getCenter();
+ const zoom=map.getZoom();
+
+ map.setStyle(styleURL(style));
+
+ map.once("style.load",()=>{
+  installMapResources();
+
+  map.jumpTo({
+   center:center,
+   zoom:zoom,
+   pitch:pitch,
+   bearing:bearing
+  });
+
+  if(gpsPosition) addGPSMarker();
+  if(routeData) fitRoute();
+ });
+}
+
+/* ----------------------------------------------------------
+   ADMINISTRATIVE AREA SELECTORS
+---------------------------------------------------------- */
+
+function populateSelects(){
+ const region=$("region");
+ const area=$("area");
+ const origin=$("origin");
+ const destination=$("destination");
+
+ origin.innerHTML="";
+
+ const gpsOption=document.createElement("option");
+ gpsOption.value="gps";
+ gpsOption.textContent="My GPS Location";
+ origin.appendChild(gpsOption);
+
+ places.forEach(p=>{
+  const o=document.createElement("option");
+  o.value=p.name;
+  o.textContent=p.name;
+  origin.appendChild(o);
+
+  const d=document.createElement("option");
+  d.value=p.name;
+  d.textContent=p.name;
+  destination.appendChild(d);
+ });
+
+ origin.value="gps";
+ destination.value="Brikama";
+
+ function fillAreas(){
+  const filtered=places.filter(p=>
+   region.value==="all"||p.region===region.value
+  );
+
+  area.innerHTML="";
+
+  filtered.forEach(p=>{
+   const o=document.createElement("option");
+   o.value=p.name;
+   o.textContent=p.name;
+   area.appendChild(o);
+  });
+
+  if(filtered.length) selectArea(filtered[0].name);
+ }
+
+ region.addEventListener("change",fillAreas);
+ area.addEventListener("change",()=>selectArea(area.value));
+
+ fillAreas();
+}
+
+function getPlace(name){
+ if(name==="gps"){
+  if(!gpsPosition) return null;
+  return {
+   name:"My GPS Location",
+   region:"Device GPS",
+   lat:gpsPosition.lat,
+   lon:gpsPosition.lon
+  };
+ }
+ return places.find(p=>p.name===name);
+}
+
+function selectArea(name){
+ const p=getPlace(name);
+ if(!p) return;
+
+ $("selectedName").textContent=p.name;
+ $("mapLocation").textContent=p.name+" | "+p.region+" Region";
+ updateStreetLinks(p.lat,p.lon);
+ updateMapCoordinates(p.lon,p.lat);
+
+ if(!map) return;
+
+ map.flyTo({
+  center:[p.lon,p.lat],
+  zoom:12,
+  pitch:map.getPitch(),
+  bearing:map.getBearing(),
+  speed:0.8
+ });
+
+ if(selectedMarker) selectedMarker.remove();
+
+ selectedMarker=new maplibregl.Marker({color:"#35a7ff"})
+  .setLngLat([p.lon,p.lat])
+  .setPopup(new maplibregl.Popup().setText(p.name))
+  .addTo(map);
+}
+
+/* ----------------------------------------------------------
+   GPS CAPTURE
+---------------------------------------------------------- */
+
+function captureGPS(){
+ if(!navigator.geolocation){
+  setMessage("Geolocation is not supported by this browser.");
+  return;
+ }
+
+ if(!window.isSecureContext){
+  setMessage("GPS requires HTTPS or localhost. Open this page through a secure connection.");
+  return;
+ }
+
+ $("getGPS").disabled=true;
+ $("getGPS").textContent="CAPTURING GPS...";
+
+ setMessage("Requesting device location. Please allow browser location access.");
+
+ navigator.geolocation.getCurrentPosition(
+  position=>{
+   gpsPosition={
+    lat:position.coords.latitude,
+    lon:position.coords.longitude,
+    accuracy:position.coords.accuracy,
+    altitude:position.coords.altitude,
+    heading:position.coords.heading,
+    speed:position.coords.speed,
+    timestamp:position.timestamp
+   };
+
+   $("getGPS").disabled=false;
+   $("getGPS").textContent="◎ CAPTURE MY CURRENT GPS LOCATION";
+
+   displayGPS();
+
+   if(map){
+    addGPSMarker();
+
+    map.flyTo({
+     center:[gpsPosition.lon,gpsPosition.lat],
+     zoom:15,
+     pitch:map.getPitch(),
+     bearing:map.getBearing()
+    });
+   }
+
+   $("mapLocation").textContent="Your captured GPS location";
+   updateMapCoordinates(gpsPosition.lon,gpsPosition.lat);
+   updateStreetLinks(gpsPosition.lat,gpsPosition.lon);
+
+   setMessage("GPS captured. Reported accuracy: approximately "+Math.round(gpsPosition.accuracy)+" metres.");
+  },
+  error=>{
+   $("getGPS").disabled=false;
+   $("getGPS").textContent="◎ CAPTURE MY CURRENT GPS LOCATION";
+
+   let msg="Unable to obtain GPS location.";
+
+   if(error.code===1) msg="Location permission denied. Allow location access in your browser settings.";
+   if(error.code===2) msg="Device position unavailable. Check GPS and location services.";
+   if(error.code===3) msg="GPS request timed out. Please try again.";
+
+   $("gpsStatus").textContent=msg;
+   setMessage(msg);
+  },
+  {
+   enableHighAccuracy:true,
+   timeout:25000,
+   maximumAge:0
+  }
+ );
+}
+
+function displayGPS(){
+ if(!gpsPosition) return;
+
+ $("gpsCoordinates").innerHTML=
+  "Latitude: "+gpsPosition.lat.toFixed(7)+"<br>"+
+  "Longitude: "+gpsPosition.lon.toFixed(7)+"<br>"+
+  "Accuracy: ±"+Math.round(gpsPosition.accuracy)+" metres";
+
+ $("gpsStatus").innerHTML=
+  '<span class="gps-indicator"></span> GPS position captured';
+
+ $("gpsSummary").textContent=
+  "Latitude: "+gpsPosition.lat.toFixed(7)+
+  ". Longitude: "+gpsPosition.lon.toFixed(7)+
+  ". Reported accuracy: approximately "+
+  Math.round(gpsPosition.accuracy)+" metres. Captured at "+
+  new Date(gpsPosition.timestamp).toLocaleString()+".";
+}
+
+function addGPSMarker(){
+ if(!map||!gpsPosition) return;
+
+ if(gpsMarker) gpsMarker.remove();
+
+ const el=document.createElement("div");
+ el.style.cssText=
+  "width:22px;height:22px;background:white;border:5px solid #147ee8;border-radius:50%;box-shadow:0 0 0 5px rgba(53,167,255,.3)";
+
+ gpsMarker=new maplibregl.Marker({
+  element:el,
+  anchor:"center"
+ })
+ .setLngLat([gpsPosition.lon,gpsPosition.lat])
+ .setPopup(
+  new maplibregl.Popup({offset:15}).setHTML(
+   "<strong>My GPS Location</strong><br>"+
+   "Latitude: "+gpsPosition.lat.toFixed(6)+"<br>"+
+   "Longitude: "+gpsPosition.lon.toFixed(6)+"<br>"+
+   "Accuracy: ±"+Math.round(gpsPosition.accuracy)+" m"
+  )
+ )
+ .addTo(map);
+}
+
+function useGPSAsOrigin(){
+ if(!gpsPosition){
+  setMessage("Capture your GPS location first.");
+  return;
+ }
+
+ $("origin").value="gps";
+
+ if(map){
+  map.flyTo({
+   center:[gpsPosition.lon,gpsPosition.lat],
+   zoom:14,
+   pitch:map.getPitch(),
+   bearing:map.getBearing()
+  });
+ }
+
+ setMessage("Your captured GPS location is now the journey origin.");
+}
+
+function clearGPS(){
+ gpsPosition=null;
+
+ if(gpsMarker){
+  gpsMarker.remove();
+  gpsMarker=null;
+ }
+
+ $("gpsCoordinates").innerHTML=
+  "Latitude: Not captured<br>Longitude: Not captured<br>Accuracy: Not available";
+
+ $("gpsStatus").innerHTML=
+  '<span class="gps-indicator"></span> GPS not yet captured';
+
+ $("gpsSummary").textContent="No GPS position has been captured.";
+
+ if($("origin").value==="gps") $("origin").value="Banjul";
+
+ setMessage("Captured GPS position cleared.");
+}
+
+function copyGPS(){
+ if(!gpsPosition){
+  setMessage("No GPS coordinates available to copy.");
+  return;
+ }
+
+ const value=
+  gpsPosition.lat.toFixed(7)+", "+gpsPosition.lon.toFixed(7);
+
+ if(navigator.clipboard&&navigator.clipboard.writeText){
+  navigator.clipboard.writeText(value)
+   .then(()=>setMessage("GPS coordinates copied: "+value))
+   .catch(()=>setMessage("Clipboard access failed. Copy the coordinates manually."));
+ }else{
+  setMessage("Clipboard access is unavailable in this browser.");
+ }
+}
+
+/* ----------------------------------------------------------
+   STREET IMAGERY LINKS
+---------------------------------------------------------- */
+
+function updateStreetLinks(lat,lon){
+ if(lat===undefined||lon===undefined){
+  const p=getPlace($("area").value)||places[0];
+  lat=p.lat;
+  lon=p.lon;
+ }
+
+ $("googleStreet").href=
+  "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint="+lat+","+lon;
+
+ $("mapillary").href=
+  "https://www.mapillary.com/app/?lat="+lat+"&lng="+lon+"&z=17";
+
+ $("kartaview").href=
+  "https://kartaview.org/map/@"+lat+","+lon+",17z";
+}
+
+function updateMapCoordinates(lon,lat){
+ $("mapCoordinates").textContent=
+  "Lat: "+lat.toFixed(5)+" | Lon: "+lon.toFixed(5);
+}
+
+/* ----------------------------------------------------------
+   3D TERRAIN
+---------------------------------------------------------- */
+
+function setView(){
+ if(!map){
+  setMessage("Load MapTiler before changing the map view.");
+  return;
+ }
+
+ const is3d=$("viewMode").value==="3d";
+ const pitch=is3d?Number($("pitch").value):0;
+
+ terrainEnabled=is3d;
+ map.setPitch(pitch);
+
+ $("viewLabel").textContent=is3d?"3D TERRAIN":"2D";
+
+ if(is3d){
+  try{
+   if(!map.getSource("maptiler-dem")){
+    installMapResources();
+   }
+
+   map.setTerrain({
+    source:"maptiler-dem",
+    exaggeration:Number($("exaggeration").value)
+   });
+
+   setMessage("MapTiler 3D terrain enabled where elevation tiles are available.");
+  }catch(error){
+   console.error(error);
+   setMessage("Could not enable 3D terrain. Check MapTiler key access to Terrain RGB.");
+  }
+ }else{
+  try{map.setTerrain(null)}catch(e){}
+  setMessage("2D map view enabled.");
+ }
+}
+
+/* ----------------------------------------------------------
+   ROUTING AND DISTANCE
+---------------------------------------------------------- */
+
+function haversine(a,b){
+ const R=6371;
+ const rad=x=>x*Math.PI/180;
+ const dLat=rad(b.lat-a.lat);
+ const dLon=rad(b.lon-a.lon);
+
+ const x=
+  Math.sin(dLat/2)**2+
+  Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*
+  Math.sin(dLon/2)**2;
+
+ return 2*R*Math.asin(Math.sqrt(x));
+}
+
+function formatDuration(minutes){
+ if(!Number.isFinite(minutes)) return "--";
+ const h=Math.floor(minutes/60);
+ const m=Math.round(minutes%60);
+ return h>0?h+" h "+m+" min":m+" min";
+}
+
+function clearRouteMarkers(){
+ routeMarkers.forEach(m=>m.remove());
+ routeMarkers=[];
+}
+
+function addRouteMarkers(a,b){
+ clearRouteMarkers();
+
+ routeMarkers.push(
+  new maplibregl.Marker({color:"#ffad42"})
+   .setLngLat([a.lon,a.lat])
+   .setPopup(new maplibregl.Popup().setText("Origin: "+a.name))
+   .addTo(map),
+
+  new maplibregl.Marker({color:"#28c98b"})
+   .setLngLat([b.lon,b.lat])
+   .setPopup(new maplibregl.Popup().setText("Destination: "+b.name))
+   .addTo(map)
+ );
+}
+
+function setRouteData(geometry){
+ routeData={
+  type:"FeatureCollection",
+  features:[{
+   type:"Feature",
+   properties:{name:"Journey route"},
+   geometry:geometry
+  }]
+ };
+
+ if(map&&map.isStyleLoaded()){
+  installMapResources();
+ }
+}
+
+function fitRoute(){
+ if(!map||!routeData||!routeData.features.length) return;
+
+ const coords=routeData.features[0].geometry.coordinates;
+ if(!coords.length) return;
+
+ const bounds=new maplibregl.LngLatBounds(coords[0],coords[0]);
+ coords.forEach(c=>bounds.extend(c));
+
+ map.fitBounds(bounds,{
+  padding:70,
+  maxZoom:13,
+  duration:900
+ });
+}
+
+async function calculateJourney(){
+ if(!map){
+  setMessage("Load MapTiler before calculating a journey.");
+  return;
+ }
+
+ const a=getPlace($("origin").value);
+ const b=getPlace($("destination").value);
+ const mode=$("travelMode").value;
+
+ if(!a){
+  setMessage("GPS origin is unavailable. Capture GPS or select a town.");
+  return;
+ }
+
+ if(!b){
+  setMessage("Select a valid destination.");
+  return;
+ }
+
+ if(a.name===b.name){
+  setMessage("Choose two different locations.");
+  return;
+ }
+
+ $("calculateRoute").disabled=true;
+ setMessage("Calculating journey...");
+
+ const straightDistance=haversine(a,b);
+ let distance=straightDistance;
+ let minutes=0;
+ let method="Straight-line estimate";
+
+ let geometry={
+  type:"LineString",
+  coordinates:[[a.lon,a.lat],[b.lon,b.lat]]
+ };
+
+ try{
+  if(mode==="driving"){
+   const url=
+    "https://router.project-osrm.org/route/v1/driving/"+
+    a.lon+","+a.lat+";"+b.lon+","+b.lat+
+    "?overview=full&geometries=geojson&steps=false";
+
+   const response=await fetch(url);
+
+   if(!response.ok){
+    throw new Error("Routing service returned HTTP "+response.status);
+   }
+
+   const data=await response.json();
+
+   if(data.code!=="Ok"||!data.routes||!data.routes.length){
+    throw new Error("No driving route was returned.");
+   }
+
+   const route=data.routes[0];
+   distance=route.distance/1000;
+   minutes=route.duration/60;
+   geometry=route.geometry;
+   method="OSRM road-network route";
+
+  }else{
+   const factor=mode==="walking"?1.25:1.18;
+   const speed=mode==="walking"?4.5:15;
+
+   distance=straightDistance*factor;
+   minutes=(distance/speed)*60;
+
+   method=mode==="walking"
+    ?"Walking estimate using assumed 4.5 km/h"
+    :"Cycling estimate using assumed 15 km/h";
+  }
+
+  setRouteData(geometry);
+  addRouteMarkers(a,b);
+  fitRoute();
+
+  $("distance").textContent=distance.toFixed(1)+" km";
+  $("duration").textContent=formatDuration(minutes);
+
+  $("journeyTitle").textContent=a.name+" → "+b.name;
+
+  $("journeyDescription").textContent=
+   "Estimated distance: "+distance.toFixed(1)+" km. "+
+   "Estimated travel time: "+formatDuration(minutes)+". "+
+   "Straight-line distance: "+straightDistance.toFixed(1)+" km. "+
+   "Method: "+method+".";
+
+  updateChart(distance,minutes);
+  setMessage("Journey calculation completed. Method: "+method+".");
+
+ }catch(error){
+  console.error(error);
+
+  $("distance").textContent="--";
+  $("duration").textContent="--";
+  $("journeyTitle").textContent="Journey route unavailable";
+  $("journeyDescription").textContent=
+   "The routing service did not return a route. Check your connection or try again later. "+
+   "Error: "+error.message;
+
+  setMessage("Journey calculation failed: "+error.message);
+
+ }finally{
+  $("calculateRoute").disabled=false;
+ }
+}
+
+/* ----------------------------------------------------------
+   CHART
+---------------------------------------------------------- */
+
+function updateChart(distance,minutes){
+ if(typeof Chart==="undefined") return;
+
+ const ctx=$("journeyChart").getContext("2d");
+ if(chart) chart.destroy();
+
+ chart=new Chart(ctx,{
+  type:"bar",
+  data:{
+   labels:["Distance (km)","Travel time (min)"],
+   datasets:[{
+    label:"Journey summary",
+    data:[distance,minutes],
+    backgroundColor:["#35a7ff","#28c98b"],
+    borderRadius:5
+   }]
+  },
+  options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   plugins:{
+    legend:{display:false},
+    tooltip:{enabled:true}
+   },
+   scales:{
+    x:{ticks:{color:"#cbd8e8"},grid:{display:false}},
+    y:{beginAtZero:true,ticks:{color:"#9aadc3"},grid:{color:"#263a52"}}
+   }
+  }
+ });
+}
+
+function clearJourney(){
+ routeData=null;
+ clearRouteMarkers();
+
+ if(map&&map.getSource("journey")){
+  map.getSource("journey").setData({
+   type:"FeatureCollection",
+   features:[]
+  });
+ }
+
+ $("distance").textContent="--";
+ $("duration").textContent="--";
+ $("journeyTitle").textContent="No journey calculated";
+ $("journeyDescription").textContent=
+  "Select an origin and destination, then calculate the journey.";
+
+ if(chart){
+  chart.destroy();
+  chart=null;
+ }
+
+ setMessage("Journey cleared.");
+}
+
+/* ----------------------------------------------------------
+   RESET
+---------------------------------------------------------- */
+
+function resetMap(){
+ if(!map){
+  setMessage("Load MapTiler first.");
+  return;
+ }
+
+ map.flyTo({
+  center:[-15.55,13.45],
+  zoom:7.2,
+  pitch:0,
+  bearing:0,
+  speed:0.8
+ });
+
+ $("region").value="all";
+ $("region").dispatchEvent(new Event("change"));
+ $("viewMode").value="2d";
+ $("pitch").value="0";
+ $("bearing").value="0";
+
+ setView();
+
+ $("mapLocation").textContent="National overview";
+ updateMapCoordinates(-15.55,13.45);
+ setMessage("National view restored.");
+}
+
+/* ----------------------------------------------------------
+   EVENTS
+---------------------------------------------------------- */
+
+$("loadMap").addEventListener("click",loadMap);
+
+$("showKey").addEventListener("click",()=>{
+ const field=$("maptilerKey");
+ field.type=field.type==="password"?"text":"password";
+});
+
+$("getGPS").addEventListener("click",captureGPS);
+$("useGPSOrigin").addEventListener("click",useGPSAsOrigin);
+$("clearGPS").addEventListener("click",clearGPS);
+$("copyGPS").addEventListener("click",copyGPS);
+
+$("locateMap").addEventListener("click",()=>{
+ if(!gpsPosition){
+  captureGPS();
+  return;
+ }
+
+ if(!map){
+  setMessage("Load MapTiler first.");
+  return;
+ }
+
+ map.flyTo({
+  center:[gpsPosition.lon,gpsPosition.lat],
+  zoom:15,
+  pitch:map.getPitch(),
+  bearing:map.getBearing()
+ });
+
+ addGPSMarker();
+});
+
+$("zoomArea").addEventListener("click",()=>{
+ selectArea($("area").value);
+});
+
+$("basemap").addEventListener("change",e=>{
+ changeBasemap(e.target.value);
+});
+
+$("viewMode").addEventListener("change",setView);
+
+$("pitch").addEventListener("change",()=>{
+ $("viewMode").value="3d";
+ setView();
+});
+
+$("exaggeration").addEventListener("change",()=>{
+ if($("viewMode").value==="3d") setView();
+});
+
+$("bearing").addEventListener("change",e=>{
+ if(map) map.rotateTo(Number(e.target.value),{duration:600});
+});
+
+$("northUp").addEventListener("click",()=>{
+ if(!map) return;
+ map.rotateTo(0,{duration:600});
+ $("bearing").value="0";
+});
+
+$("tiltUp").addEventListener("click",()=>{
+ if(!map) return;
+ $("viewMode").value="3d";
+ $("pitch").value="60";
+ setView();
+});
+
+$("tiltDown").addEventListener("click",()=>{
+ if(!map) return;
+ $("viewMode").value="2d";
+ $("pitch").value="0";
+ setView();
+});
+
+$("rotateLeft").addEventListener("click",()=>{
+ if(map) map.rotateTo(map.getBearing()-45,{duration:500});
+});
+
+$("rotateRight").addEventListener("click",()=>{
+ if(map) map.rotateTo(map.getBearing()+45,{duration:500});
+});
+
+$("resetMap").addEventListener("click",resetMap);
+$("calculateRoute").addEventListener("click",calculateJourney);
+$("clearRoute").addEventListener("click",clearJourney);
+
+/* ----------------------------------------------------------
+   START
+---------------------------------------------------------- */
+
+populateSelects();
+
+</script>
+</body>
+</html>
